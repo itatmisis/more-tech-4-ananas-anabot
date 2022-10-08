@@ -22,4 +22,4 @@ RUN poetry install
 
 # Run your app
 COPY . /app
-CMD [ "poetry", "run", "python", "-m", "src/anabot/app.py" ]
+CMD [ "poetry", "run", "anabot-start" ]
