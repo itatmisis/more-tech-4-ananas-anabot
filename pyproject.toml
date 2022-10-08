@@ -3,8 +3,8 @@ name        = "anabot"
 version     = "0.1.0"
 description = "Telegram Bot interface for AnanasNews"
 authors     = ["Artyom Sosedka <sostema@gmail.com>"]
-repository  = "https://github.com/itatmisis/more-tech-4-ananas"
-packages = [{include = "anabot"}]
+repository  = "https://github.com/itatmisis/more-tech-4-ananas-anabot"
+packages    = [{ include = "anabot", from = "src" }]
 
 [tool.poetry.dependencies]
 python  = "^3.8, <3.11"
