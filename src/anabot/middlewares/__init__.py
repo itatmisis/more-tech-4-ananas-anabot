@@ -1,4 +1,4 @@
-from middlewares.throttling import ThrottlingMiddleware
+from anabot.middlewares.throttling import ThrottlingMiddleware
 
 
 def setup_middleware(dp):

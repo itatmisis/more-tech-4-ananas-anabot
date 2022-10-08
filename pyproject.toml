@@ -9,6 +9,7 @@ packages    = [{ include = "anabot", from = "src" }]
 [tool.poetry.dependencies]
 python  = "^3.8, <3.11"
 aiogram = "^2.22.2"
+environs = "^9.5.0"
 
 [tool.poetry.group.type_check.dependencies]
 mypy = "^0.982"
