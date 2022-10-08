@@ -1,5 +1,6 @@
 from aiogram import types
 from aiogram.dispatcher.filters import Command, Text
+
 from anabot.keyboards.default import digest_menu, registration_menu
 from anabot.loader import dp
 from anabot.states.registration_states import RegistrationState
