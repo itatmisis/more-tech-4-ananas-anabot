@@ -10,16 +10,22 @@ class API:
 
     def registration(self, user):
         try:
-            response = requests.post(self.apiurl + '/user', data=user.toJSON())
+            print(user.id)
+            print(user.toJSON())
+            response = requests.post(self.apiurl + '/users/', json=user.toJSON())
+            print(response)
         except:
             print("Ошибка во время отправки регистрации")
 
     def digest(self, user_id, digest_type):
         news = list()
         try:
-            response = requests.get(self.apiurl + '/digest', params={'user_id': user_id, 'type': digest_type})
+            # response = requests.get(self.apiurl + f'/news/user/{user_id}/', params={'user_id': user_id, 'type': digest_type})
+            response = requests.get(self.apiurl + f'/news/user/{user_id}/')
+            print(response.status_code)
             if response.status_code == 200:
                 json_response = response.json()
+                # print(json_response)
                 for json_news in json_response:
                     news_ = News()
                     news_.fromJSON(json_news)
@@ -32,6 +38,6 @@ class API:
     def add_reaction(self, user_id, post_id, action):
         action_data = Action(user_id, post_id, action)
         try:
-            response = requests.post(self.apiurl + '/action', data=action_data.toJSON())
+            response = requests.post(self.apiurl + '/actions/', json=action_data.toJSON())
         except:
             print("Ошибка во время отправки реакции")

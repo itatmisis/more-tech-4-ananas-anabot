@@ -10,28 +10,26 @@ from anabot.utils.db_api.models import News
 @dp.message_handler(Text(equals=["Дневной дайджест"]), state=None)
 async def send_news(message: types.Message):
     news = api.digest(message.from_user.id, 1)
-    print(news)
-    url_ = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSr7ISTuF5LYO47wWFzXxyRQaEGRtO58ttf1tnfYns&s"
-    await message.answer_photo(photo=url_, caption="<b>Article Title 1</b>",
-                               reply_markup=create_reaction_keyboard("www.google.com", 1, 929751))
-    await message.answer_photo(photo=url_, caption="<b>Article Title 2</b>",
-                               reply_markup=create_reaction_keyboard("www.google.com", 2, 929752))
-    await message.answer_photo(photo=url_, caption="<b>Article Title 3</b>",
-                               reply_markup=create_reaction_keyboard("www.google.com", 3, 929753, continue_button=True))
+    await message.answer(text=news[0].short_text,
+                         reply_markup=create_reaction_keyboard(news[0].url, 1, str(news[0].id)[:5]))
+    await message.answer(text=news[1].short_text,
+                         reply_markup=create_reaction_keyboard(news[1].url, 2, str(news[1].id)[:5]))
+    await message.answer(text=news[2].short_text,
+                         reply_markup=create_reaction_keyboard(news[2].url, 3, str(news[2].id)[:5], continue_button=True))
     print("Запрос дневного дайджеста")
 
 
 @dp.callback_query_handler(reaction_callback.filter(reaction=["like", "dislike"]))
 async def save_reaction(call: types.CallbackQuery, callback_data: dict):
     await call.answer(cache_time=15)
-    answer_reaction = 2 if callback_data["reaction"] == "like" else 3
-    api.add_reaction(call.from_user.id, int(callback_data["news_id"]), answer_reaction)
+    answer_reaction = 1 if callback_data["reaction"] == "like" else 2
+    # api.add_reaction(callback_data["news_id"], call.from_user.id, answer_reaction)
     reaction_bool = True if callback_data["reaction"] == "like" else False
     await call.message.edit_reply_markup(
         create_reaction_keyboard(
             callback_data["link"],
             int(callback_data["article_number"]),
-            int(callback_data["news_id"]),
+            callback_data["news_id"],
             reaction=reaction_bool,
             continue_button=bool(int(callback_data["continue_button"])),
         )
@@ -57,11 +55,11 @@ async def continue_news(call: types.CallbackQuery, callback_data: dict):
             reaction=reaction,
         )
     )
-    url_ = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSr7ISTuF5LYO47wWFzXxyRQaEGRtO58ttf1tnfYns&s"
-    await bot.send_photo(call.from_user.id, photo=url_, caption="<b>Article Title 4</b>",
-                         reply_markup=create_reaction_keyboard("www.google.com", 1, 1111))
-    await bot.send_photo(call.from_user.id, photo=url_, caption="<b>Article Title 5</b>",
-                         reply_markup=create_reaction_keyboard("www.google.com", 2, 1111))
-    await bot.send_photo(call.from_user.id, photo=url_, caption="<b>Article Title 6</b>",
-                         reply_markup=create_reaction_keyboard("www.google.com", 1, 1111, continue_button=True))
+    news = api.digest(call.from_user.id, 1)
+    await bot.send_message(call.from_user.id, text=news[0].short_text,
+                           reply_markup=create_reaction_keyboard(news[0].url, 1, str(news[0].id)[:5]))
+    await bot.send_message(call.from_user.id, text=news[1].short_text,
+                           reply_markup=create_reaction_keyboard(news[1].url, 2, str(news[1].id)[:5]))
+    await bot.send_message(call.from_user.id, text=news[2].short_text,
+                           reply_markup=create_reaction_keyboard(news[2].url, 3, str(news[2].id)[:5], continue_button=True))
     print(callback_data)
